@@ -38,7 +38,6 @@ class Fountain {
     }
     
     draw() {
-
         let randOffset = (Math.random() < 0.5 ? -1 : 1)*Math.random()*canvas.width/15000
         this.water.push({x:this.pos.x, y:this.pos.y, slope:Object.assign({}, this.slope), offset:randOffset})
 
@@ -106,6 +105,22 @@ window.addEventListener("mousemove", function(event) {
     mousePos.x = mouseX
     mousePos.y = mouseY
 });
+
+window.addEventListener('touchstart', function(e) {
+    const event = e.changedTouches[0]
+    mouseX = ((event.clientX - rect.left)/(window.innerWidth - rect.left*2))*canvas.width
+    mouseY = ((event.clientY - rect.top)/(window.innerHeight - rect.top*2))*canvas.height
+
+    if (mouseMode == 0) {
+        mouseMode = 1
+        currentFountainCreation = [mouseX, mouseY]
+    } else if (mouseMode == 1) {
+        startShake()
+        mouseMode = 0
+        slope = normalize(mouseX - currentFountainCreation[0], mouseY - currentFountainCreation[1], normFactor)
+        fountains.push(new Fountain(currentFountainCreation[0], currentFountainCreation[1], slope[0], slope[1]))
+    }
+})
 
 window.addEventListener("click", function(event) {
     var rect = canvas.getBoundingClientRect();
