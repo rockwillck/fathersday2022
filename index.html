@@ -1,0 +1,62 @@
+<html>
+<style>
+    body {
+        background-color: rgb(75, 75, 75);
+        cursor: none;
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none;
+    }
+
+    .canvas-container {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    canvas {
+        width:100vmin;
+        height:75vmin;
+        border-color: black;
+        border-style: solid;
+        border-width: 0.5vmin;
+        border-radius: 5%;
+        z-index: 0;
+        position: absolute;
+    }
+
+    .overlay {
+        position:absolute;
+        z-index: 5;
+        left:0;
+        top:0;
+        width: 100%;
+        height:100%;
+        opacity:0.5;
+        padding:3vmin;
+        font-family: monospace;
+        font-size: 2.5vmin;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+<head>
+    <title>Fountain Simulator</title>
+</head>
+<body>
+    <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="overlay" id="overlay">
+        <h3>It takes balls to raise a child. Thank you!</h3>
+    </div>
+</body>
+<script id="script" src="script.js"></script>
+</html>
