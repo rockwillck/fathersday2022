@@ -4,6 +4,8 @@ var rect = canvas.getBoundingClientRect();
 canvas.width = 1024
 canvas.height = 768
 
+var konamiCode = ""
+
 function normalize(x, y, factor) {
     let hypot = Math.sqrt(x**2 + y**2)
     return [x/hypot * factor, y/hypot * factor]
@@ -42,7 +44,7 @@ class Fountain {
         this.water.push({x:this.pos.x, y:this.pos.y, slope:Object.assign({}, this.slope), offset:randOffset})
 
         this.water.forEach((waterDroplet, index) => {
-            ctx.fillStyle = "yellow"
+            ctx.fillStyle = konamiCode.includes("START") ? "yellow" : "rgba(50, 50, 255, 0.6)"
             ctx.beginPath()
             ctx.arc(waterDroplet.x, waterDroplet.y, waterRadius, 0, 2*Math.PI)
             ctx.closePath()
@@ -63,24 +65,41 @@ class Fountain {
                 this.water.splice(index, 1)
             }
 
-            ctx.strokeStyle = "gray"
             ctx.lineWidth = canvas.width/500
-            ctx.fillStyle = "rgb(250, 250, 150)"
-            roundRect(this.pos.x - canvas.width*0.025, this.pos.y, canvas.width*0.05, canvas.height*0.125)
-            ctx.moveTo(this.pos.x, this.pos.y)
-            ctx.lineTo(this.pos.x, this.pos.y + canvas.height*0.05)
-            ctx.stroke()
-            ctx.fillStyle = "rgb(225, 225, 150)"
-            ctx.beginPath()
-            ctx.arc(this.pos.x - canvas.width*0.025, this.pos.y + canvas.height*0.125, canvas.width*0.025, 0, 2*Math.PI)
-            ctx.closePath()
-            ctx.fill()
-            ctx.stroke()
-            ctx.beginPath()
-            ctx.arc(this.pos.x + canvas.width*0.025, this.pos.y + canvas.height*0.125, canvas.width*0.025, 0, 2*Math.PI)
-            ctx.closePath()
-            ctx.fill()
-            ctx.stroke()
+            if (konamiCode.includes("START")) {
+                ctx.strokeStyle = "gray"
+                ctx.fillStyle = "rgb(250, 250, 150)"
+                roundRect(this.pos.x - canvas.width*0.025, this.pos.y, canvas.width*0.05, canvas.height*0.125)
+                ctx.moveTo(this.pos.x, this.pos.y)
+                ctx.lineTo(this.pos.x, this.pos.y + canvas.height*0.05)
+                ctx.stroke()
+                ctx.fillStyle = "rgb(225, 225, 150)"
+                ctx.beginPath()
+                ctx.arc(this.pos.x - canvas.width*0.025, this.pos.y + canvas.height*0.125, canvas.width*0.025, 0, 2*Math.PI)
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+                ctx.beginPath()
+                ctx.arc(this.pos.x + canvas.width*0.025, this.pos.y + canvas.height*0.125, canvas.width*0.025, 0, 2*Math.PI)
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+            } else {
+                ctx.strokeStyle = "black"
+                ctx.fillStyle = "gray"
+                ctx.beginPath()
+                ctx.arc(this.pos.x, this.pos.y, canvas.height*0.025, 0, 2*Math.PI)
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+                ctx.beginPath()
+                ctx.arc(this.pos.x, this.pos.y+canvas.height*0.065, canvas.height*0.04, 0, 2*Math.PI)
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+                ctx.fillRect(this.pos.x - canvas.width*0.03, this.pos.y+canvas.height*0.095, canvas.width*0.06, canvas.height*0.025)
+                ctx.strokeRect(this.pos.x - canvas.width*0.03, this.pos.y+canvas.height*0.095, canvas.width*0.06, canvas.height*0.025)
+            }
         })
     }
 }
@@ -91,7 +110,32 @@ mousePos = {
 }
 
 window.addEventListener("keydown", function(event) {
-    
+    konamiCode += event.key
+    if (konamiCode.includes("ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba") && !konamiCode.includes("START")) {
+        if (confirm("START?")) {
+            shakeLength = 800
+            shakeFactor = canvas.width/100
+            startShake()
+            konamiCode += "START"
+            setInterval(() => {
+                shakeFactor = canvas.width/250
+                shakeLength = 250
+            }, shakeLength)
+            document.getElementById("fountainMessage").innerText = "It takes balls to raise a child. Thank you!"
+        }
+    } else if (konamiCode.replace("ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba", "").includes("ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba") && konamiCode.includes("START")) {
+        if (confirm("EXIT?")) {
+            shakeLength = 800
+            shakeFactor = canvas.width/100
+            startShake()
+            konamiCode = ""
+            setInterval(() => {
+                shakeFactor = canvas.width/250
+                shakeLength = 250
+            }, shakeLength)
+            document.getElementById("fountainMessage").innerText = "You're a fountain of generosity in a sea of hate. <3"
+        }
+    }
 })
 
 window.addEventListener("keyup", function(event) {
@@ -172,8 +216,8 @@ const gravity = canvas.height/750
 var mouseMode = 0
 var currentFountainCreation = []
 const normFactor = canvas.width/75
-const shakeFactor = canvas.width/250
-const shakeLength = 250
+var shakeFactor = canvas.width/250
+var shakeLength = 250
 let lastUpdate
 var dt
 function animate() {

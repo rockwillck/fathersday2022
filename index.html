@@ -32,14 +32,13 @@
     }
 
     .overlay {
+        width:100%;
+        height:100%;
         position:absolute;
         z-index: 5;
         left:0;
         top:0;
-        width: 100%;
-        height:100%;
         opacity:0.5;
-        padding:3vmin;
         font-family: monospace;
         font-size: 2.5vmin;
         display:flex;
@@ -55,7 +54,7 @@
         <canvas id="canvas"></canvas>
     </div>
     <div class="overlay" id="overlay">
-        <h3>It takes balls to raise a child. Thank you!</h3>
+        <h3 id="fountainMessage">You're a fountain of generosity in a sea of hate. <3</h3>
     </div>
 </body>
 <script id="script" src="script.js"></script>
